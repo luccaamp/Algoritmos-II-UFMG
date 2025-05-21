@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação - Algoritmos II</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Trabalho Prático: Compressão com LZW</h1>
+    </header>
+    <nav>
+        <a href="#introducao">Introdução</a>
+        <a href="#descricao">Descrição do Algoritmo</a>
+        <a href="#estrutura">Árvore de Prefixos</a>
+        <a href="#implementacao">Implementação</a>
+        <a href="#resultados">Estatísticas</a>
+        <a href="#conclusao">Conclusão</a>
+        <a href="#referencias">Referências</a>
+    </nav>
+    <main>
+        <section id="introducao">
+            <h2>Introdução</h2>
+            <p>Este trabalho tem como objetivo explorar a implementação prática do algoritmo LZW, com foco no uso de estruturas de dados eficientes, como a Trie Compacta, para otimizar o processo de compressão. 
+                A abordagem é dividida em duas variantes do algoritmo: uma versão com códigos de comprimento fixo e outra com comprimentos variáveis, ambas projetadas para lidar com diferentes cenários de compressão.
+
+                Além disso, a análise prática inclui testes com arquivos de diferentes tamanhos e formatos, avaliando métricas como taxa de compressão, tempo de execução e uso de memória. Por meio dessa implementação, buscamos compreender profundamente os desafios e as vantagens de métodos baseados em manipulaçãode sequências e suas aplicações em sistemas modernos.</p>
+        </section>
+        <section id="descricao">
+            <h2>Descrição do Algoritmo</h2>
+
+            <p>
+                O algoritmo <strong>Lempel-Ziv-Welch (LZW)</strong> é um método de compressão sem perdas baseado no conceito de substituição 
+                de padrões repetidos por códigos únicos, armazenados em um dicionário dinâmico. Criado em 1984 como uma extensão das técnicas 
+                desenvolvidas por Abraham Lempel e Jacob Ziv, o LZW é amplamente utilizado devido à sua eficiência e simplicidade.
+            </p>
+        
+            <h3>Funcionamento Básico</h3>
+            <ol>
+                <li>
+                    <strong>Inicialização do Dicionário:</strong><br>
+                    O algoritmo começa com um dicionário inicial contendo todas as combinações possíveis de símbolos únicos do alfabeto da entrada. 
+                    Por exemplo, para texto ASCII, o dicionário inicial conterá 256 entradas, uma para cada caractere.
+                </li>
+                <li>
+                    <strong>Leitura e Compressão:</strong><br>
+                    O algoritmo lê a sequência de entrada caractere por caractere, construindo progressivamente padrões maiores. 
+                    Se o padrão atual já existe no dicionário, o próximo caractere é adicionado ao padrão. Caso contrário, o padrão anterior é 
+                    codificado como uma saída numérica, e o novo padrão é adicionado ao dicionário com um código exclusivo.
+                </li>
+                <li>
+                    <strong>Saída dos Códigos:</strong><br>
+                    O processo continua até que toda a sequência de entrada seja processada, momento em que o último padrão é codificado e enviado para a saída.
+                </li>
+            </ol>
+        
+            <h3>Estruturas de Dados Utilizadas</h3>
+            <p>
+                A eficiência do LZW depende diretamente da estrutura de dados escolhida para representar o dicionário. Neste trabalho, empregamos o uso da
+            <strong>Trie Compacta</strong>, que, por sua vez, é adotada de maneira a otimizar o armazenamento e a pesquisa de padrões, especialmente em cenários onde o dicionário cresce rapidamente.
+            </p>
+        
+            <h3>Variações Implementadas</h3>
+            <ol>
+                <li><strong>Comprimento Fixo dos Códigos:</strong><br>
+                    <ul>
+                        <li>Os códigos gerados têm todos o mesmo comprimento (por exemplo, 12 bits).</li>
+                        <li>O comprimento é fixado previamente e usado ao longo de todo o processo de compressão e descompressão.</li>
+                        <li>Vantagens:</li>
+                        <ul>
+                            <li>Simplicidade de implementação, pois não é necessário recalcular ou gerenciar mudanças no tamanho dos códigos.</li>
+                            <li>Adequado para sistemas ou protocolos onde o hardware/software requer tamanhos fixos para simplificação.</li>
+                        </ul>       
+                        <li>Desvantagens:</li>
+                        <ul>
+                            <li>Pode ser ineficiente quando a tabela de códigos cresce. Se o comprimento fixo for pequeno, o número de códigos disponíveis será limitado, resultando em reinicialização prematura da tabela.</li>
+                            <li>Se o comprimento fixo for grande, espaço desnecessário pode ser usado em códigos menores no início do processo.</li>
+                        </ul>
+                    </ul>
+                </li>
+                <br>
+                <li><strong>Comprimento Variável dos Códigos:</strong><br>
+                    <ul>
+                        <li>O comprimento dos códigos varia dinamicamente com o crescimento da tabela de dicionários.</li>
+                        <li>O algoritmo começa com um comprimento menor (como 9 bits) e aumenta o tamanho conforme novos códigos são adicionados à tabela.</li>
+                        <li>Vantagens:</li>
+                        <ul>
+                            <li>Utiliza códigos mais curtos inicialmente, o que melhora a eficiência para entradas pequenas ou em etapas iniciais.</li>
+                            <li>Permite melhor utilização do espaço de dicionário, adaptando-se automaticamente à complexidade dos dados.</li>
+                        </ul>
+                        <li>Desvantagens:</li>
+                        <ul>
+                            <li>Mais complexo de implementar, pois exige um mecanismo para monitorar o crescimento da tabela e ajustar o comprimento dos códigos.</li>
+                            <li>Pode ser mais lento devido à necessidade de recalcular e adaptar os tamanhos.</li>
+                        </ul>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Diferenças Principais:</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th><strong>Aspecto</strong></th>
+                        <th>Comprimento Fixo</th>
+                        <th>Comprimento Variável</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tamanho dos Códigos</strong></td>
+                        <td>Não muda, é fixado previamente.</td>
+                        <td>Cresce dinamicamente com a tabela.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Eficiência Inicial</strong></td>
+                        <td>Menor (códigos longos desde o início).</td>
+                        <td>Maior (códigos curtos no começo).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Complexidade</strong></td>
+                        <td>Mais simples de implementar.</td>
+                        <td>Requer maior controle e ajustes.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uso de Memória</strong></td>
+                        <td>Pode desperdiçar memória.</td>
+                        <td>Melhor utilização de memória.</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <h3>Etapas do Algoritmo</h3>
+            <ol>
+                <li><strong>Compressão:</strong> Recebe uma sequência de entrada e retorna uma sequência comprimida de códigos.</li>
+                <li><strong>Descompressão:</strong> Reconstrói a sequência original a partir da sequência comprimida, utilizando o mesmo dicionário gerado durante a compressão.</li>
+            </ol>
+        
+            <h3>Exemplificação</h3>
+            <p>
+                Considere a sequência de entrada: <code>"ABABABA"</code>. O funcionamento do LZW é ilustrado na tabela a seguir:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Passo</th>
+                        <th>Padrão Atual</th>
+                        <th>Próximo Símbolo</th>
+                        <th>Código Emitido</th>
+                        <th>Atualização do Dicionário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>65 (ASCII A)</td>
+                        <td>AB → 256</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>B</td>
+                        <td>A</td>
+                        <td>66 (ASCII B)</td>
+                        <td>BA → 257</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>AB</td>
+                        <td>A</td>
+                        <td>256</td>
+                        <td>ABA → 258</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>BA</td>
+                        <td>A</td>
+                        <td>257</td>
+                        <td>BAA → 259</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+        </section>
+        <section id="estrutura">
+            <h2>Árvore de Prefixos (Trie Compacta)</h2>
+            <p>A <strong>Trie Compacta</strong> é uma variação otimizada da estrutura Trie tradicional, projetada para reduzir redundâncias ao condensar nós que possuem apenas um único filho. Essa compactação é especialmente útil em aplicações que lidam com grandes volumes de strings com prefixos comuns, como o algoritmo LZW.</p>
+
+            <h3>Características da Trie Compacta</h3>
+            <ul>
+                <li>Os nós armazenam apenas o <strong>prefixo comum</strong> das chaves em sua subárvore.</li>
+                <li>Somente os <strong>nós folha</strong> armazenam os valores associados às chaves.</li>
+                <li>A compactação é realizada ao unir caminhos lineares (nós com um único filho) em um único nó.</li>
+            </ul>
+        
+            <h3>Operações na Trie Compacta</h3>
+            <h4>1. Busca</h4>
+            <p>A busca em uma Trie Compacta segue o mesmo princípio da Trie tradicional, com a adição de manipulação de prefixos compactados:</p>
+            <ul>
+                <li>Durante a busca, o prefixo acumulado é atualizado conforme se percorre a árvore.</li>
+                <li>Para decidir qual ligação seguir, verifica-se o próximo símbolo da chave <strong>pós-prefixo</strong>.</li>
+                <li>Caso um nó folha seja encontrado antes de processar todos os símbolos da chave, a chave não está presente.</li>
+            </ul>
+        
+            <h4>2. Inserção</h4>
+            <p>O processo de inserção envolve a criação de nós internos para gerenciar prefixos compartilhados e subprefixos. Os passos são:</p>
+            <ol>
+                <li>Se a árvore estiver vazia, criar um nó folha com o prefixo igual à chave.</li>
+                <li>Buscar o elemento na árvore para localizar o ponto de inserção.</li>
+                <li>Se houver divergência entre a chave e o prefixo:
+                    <ul>
+                        <li>Criar um nó interno para armazenar o <strong>subprefixo comum</strong> entre a chave e o prefixo do nó encontrado.</li>
+                        <li>Ajustar o prefixo do nó existente, removendo o subprefixo comum, e anexá-lo como filho do novo nó interno.</li>
+                        <li>Criar um nó folha para o sufixo restante da chave e inseri-lo no novo nó interno.</li>
+                    </ul>
+                </li>
+            </ol>
+        
+            <h4>3. Remoção</h4>
+            <p>A remoção de uma chave envolve a reorganização dos nós para manter a compactação:</p>
+            <ul>
+                <li>Localizar o nó folha que contém a chave a ser removida.</li>
+                <li>Se o nó for encontrado, removê-lo.</li>
+                <li>Se o pai do nó removido ficar com apenas um filho:
+                    <ul>
+                        <li>Concatenar o prefixo do pai com o prefixo do filho.</li>
+                        <li>Remover o nó filho redundante.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Exemplo: Construção da Trie Compacta</h3>
+            <p>A frase <strong>"She sells sea shells by the sea"</strong> está sendo inserida na Trie Compacta, passo a passo. Use os botões para navegar pelas etapas.</p>
+            <div class="carousel">
+                <div class="image-container">
+                    <img id="carouselImage" src="" alt="Imagem do carrossel" />
+                </div>
+                <div class="controls">
+                    <button id="prevBtn" onclick="prevImage()" disabled>Anterior</button>
+                    <button id="nextBtn" onclick="nextImage()">Próximo</button>
+                </div>
+            </div> 
+        
+            <h3>Implementação no Algoritmo LZW</h3>
+            <p>Na implementação do LZW, a árvore de prefixos desempenha o papel de dicionário dinâmico. Cada nó da Trie armazena:</p>
+            <ul>
+                <li>Um <strong>prefixo parcial</strong> da sequência.</li>
+                <li>Um valor associado (código), que representa a sequência comprimida correspondente.</li>
+            </ul>
+        
+            <h3>Funcionamento</h3>
+            <ol>
+                <li><strong>Inserção de Padrões:</strong> Durante a compressão, quando um novo padrão é identificado, ele é adicionado à Trie com um código único. A compactação de caminhos é usada para evitar a duplicação de prefixos.</li>
+                <li><strong>Busca de Padrões:</strong> Na leitura da entrada, a Trie é percorrida para encontrar o maior padrão já existente no dicionário. Isso é feito de forma eficiente graças à estrutura hierárquica.</li>
+                <li><strong>Compactação Dinâmica:</strong> Sempre que uma nova sequência é adicionada, caminhos redundantes são simplificados, reduzindo o número de nós e otimizando a memória usada.</li>
+            </ol>
+        
+            <h3>Vantagens da Trie Compacta</h3>
+            <ul>
+                <li><strong>Desempenho em busca e inserção:</strong> Operações realizadas em tempo proporcional ao comprimento da string, em vez do número total de padrões armazenados.</li>
+                <li><strong>Escalabilidade:</strong> Suporta o crescimento rápido do dicionário sem perda significativa de desempenho.</li>
+                <li><strong>Redução de redundância:</strong> Compacta prefixos repetidos, reduzindo o consumo de memória em cenários onde padrões compartilham sequências iniciais comuns.</li>
+            </ul>
+        
+            <h3>Comparação com Outras Estruturas de Dados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estrutura de Dados</th>
+                        <th>Tempo de Busca</th>
+                        <th>Tempo de Inserção</th>
+                        <th>Uso de Memória</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tabela Hash</td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>Alto (colisões)</td>
+                    </tr>
+                    <tr>
+                        <td>Trie Simples</td>
+                        <td>O(m)</td>
+                        <td>O(m)</td>
+                        <td>Médio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trie Compacta</strong></td>
+                        <td><strong>O(m)</strong></td>
+                        <td><strong>O(m)</strong></td>
+                        <td><strong>Baixo (otimizado)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <h3>Visualização da Trie Compacta</h3>
+            <p>Abaixo está um exemplo de uma Trie Compacta construída durante a compressão da sequência <em>"ABABABA"</em>:</p>
+            <pre>
+        Root
+         ├── A -> 65
+         │    ├── B -> 256
+         │         └── A -> 258
+         └── B -> 66
+              ├── A -> 257
+            </pre>
+            <p>Nesse exemplo:</p>
+            <ul>
+                <li>Cada nó representa um padrão ou prefixo.</li>
+                <li>O valor no nó é o código associado no dicionário LZW.</li>
+            </ul>           
+        </section>
+        <section id="implementacao">
+            <h2>Implementação</h2>
+            <p> A implementação do algoritmo LZW foi realizada utilizando python, com foco na eficiência e clareza do código. 
+                O algoritmo foi dividido em duas etapas principais: compressão e descompressão, ambas baseadas no uso de uma Trie Compacta como dicionário dinâmico.</p>
+            <h3>Estrutura Geral</h3>
+            <ol>
+                <li><strong>Leitura da Entrada:</strong> A entrada é processada como uma sequência de caracteres (ou bytes), a partir de um arquivo ou string.</li>
+                <li><strong>Compressão:</strong> O texto de entrada é percorrido caractere por caractere para identificar os maiores padrões presentes no dicionário. 
+                    Caso um padrão não seja encontrado, ele é adicionado ao dicionário com um novo código e o código do maior padrão encontrado é registrado na saída.</li>
+                <li><strong>Descompressão:</strong> Na etapa de descompressão, os códigos gerados durante a compressão são utilizados para reconstruir a sequência original.
+                     O dicionário é reconstruído dinamicamente conforme os padrões são encontrados.</li>
+                <li><strong>Gerenciamento do Dicionário:</strong> O dicionário é implementado como uma Trie Compacta, que permite buscar, adicionar e gerenciar padrões de maneira eficiente.</li>
+            </ol>
+            <h3>Fluxo da Compressão</h3>
+            <ol>
+                <li>Inicialização do dicionário com os padrões básicos (todos os caracteres ASCII ou outro conjunto inicial).</li>
+                <li>Percorrendo a sequência de entrada, o maior padrão já presente no dicionário é identificado.</li>
+                <li>O código correspondente ao padrão encontrado é adicionado à saída.</li>
+                <li>O novo padrão (padrão atual + próximo caractere) é inserido no dicionário com um código único.</li>
+                <li>O processo é repetido até que toda a entrada seja processada.</li>
+            </ol>
+            <h3>Fluxo da Descompressão</h3>
+            <ol>
+                <li>Inicialização do dicionário com os padrões básicos, similar à compressão.</li>
+                <li>Para cada código recebido na entrada comprimida:</li>
+                <ul>
+                    <li>O padrão correspondente é identificado e adicionado à saída.</li>
+                    <li>O novo padrão (último padrão + primeiro caractere do padrão atual) é inserido no dicionário.</li>
+                </ul>
+                <li>O processo continua até que todos os códigos sejam decodificados.</li>
+            </ol>
+
+            <h3>Resultados:</h3>
+            <ul>
+                <li><strong>Compressão eficiente: </strong>O algoritmo reduz significativamente o tamanho da entrada para diferentes tipos de arquivos com padrões repetidos.</li>
+                <li><strong>Descompressão exata: </strong>A reconstrução da sequência original é realizada sem perdas, validando a integridade do método.</li>
+            </ul>
+
+        </section>
+        <section id="resultados">
+            <h2>Estatísticas e Testes</h2>
+            <p>
+                Foram realizados testes com diferentes tipos de arquivos, incluindo texto, gifs e imagens. 
+                As estatísticas geradas incluem:
+            </p>
+            <ul>
+                <li>Tempo total de execução.</li>
+                <li>Tamanho original do arquivo.</li>
+                <li>Tamanho do arquivo comprimido.</li>
+                <li>Taxa de compressão.</li>
+                <li>Crescimento do Dicionário</li>
+                <li>Dados Processados ao Longo do Tempo</li>
+            </ul>
+            <p>
+                Os resultados mostraram que a versão com tamanho variável obteve melhor eficiência em compressão para arquivos maiores, 
+                enquanto a versão fixa foi mais rápida em casos menores.
+            </p>
+        </section>
+        <section id="conclusao">
+            <h2>Conclusão</h2>
+            <p>A implementação do algoritmo LZW utilizando uma Trie Compacta demonstrou a eficiência desse método em cenários de compressão sem perdas, 
+                especialmente na manipulação de padrões repetidos. A comparação entre as variações de comprimento fixo e variável dos códigos evidenciou as vantagens e 
+                desvantagens de cada abordagem, destacando o equilíbrio necessário entre simplicidade, eficiência de memória e desempenho. Os testes realizados confirmaram que a 
+                Trie Compacta é uma escolha adequada para representar o dicionário dinâmico, garantindo buscas e inserções rápidas, além de uma utilização otimizada da memória. 
+                Esses resultados não apenas validam a eficácia do LZW em diversos formatos de arquivos, mas também oferecem insights valiosos sobre o impacto de diferentes configurações no desempenho do algoritmo, 
+                contribuindo para aplicações futuras em sistemas modernos de compressão de dados.</p>
+        </section>
+        <section id="referencias">
+            <h2>Referências</h2>
+            <ul>
+                <li>
+                    <a href="https://web.mit.edu/6.02/www/s2012/handouts/3.pdf" target="_blank">
+                        LZW Compression - MIT Handout
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.davidsalomon.name/DC4advertis/DComp4Ad.html" target="_blank">
+                        Data Compression - David Salomon
+                    </a>
+                </li>
+                <li>
+                    <a href="http://multimedia.ufp.pt/codecs/compressao-sem-perdas/codificacao-baseada-em-dicionarios/lzw/" target="_blank">
+                        Compressão sem perdas - Codificação LZW
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.geeksforgeeks.org/lzw-lempel-ziv-welch-compression-technique/" target="_blank">
+                        LZW Compression Technique - GeeksforGeeks
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Algoritmos II - Lucas Rafael Costa Santos | Lucca Alvarenga de Magalhães Pinto</p>
+    </footer>
+    <script src="./scripts/script.js"></script>
+</body>
+</html>

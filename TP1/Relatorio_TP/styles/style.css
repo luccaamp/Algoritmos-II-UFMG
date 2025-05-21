@@ -1,0 +1,142 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+header {
+    background: #003366;
+    color: white;
+    padding: 20px 10%;
+    text-align: center;
+}
+nav {
+    background: #dadae6;
+    padding: 10px 10%;
+    text-align: center;
+}
+nav a {
+    margin: 0 15px;
+    color: #2c3e50;
+    text-decoration: none;
+}
+nav a:hover {
+    color: #003366;
+}
+
+main {
+    padding: 0 10%;
+}
+
+h2, h3, h4 {
+    color: #2c3e50;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+table th, table td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+table th {
+    background-color: #206999;
+    color: white;
+    font-weight: bold;
+}
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+pre {
+    background: #f4f4f4;
+    padding: 10px;
+    border-left: 3px solid #3498db;
+    overflow-x: auto;
+}
+
+code {
+    background-color: #eaeaea;
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+section {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.carousel img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 300px; /* Altura máxima */
+    background: #f7f7f7; /* Fundo para espaços vazios */
+    padding: 10px; /* Distância entre a imagem e o container */
+}
+
+
+.image-container {
+    width: 500px; /* Largura padrão */
+    height: 300px; /* Altura padrão */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7; /* Fundo para imagens menores */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Garante que não haja "vazamento" */
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ajusta a imagem proporcionalmente */
+}
+
+
+.controls {
+    margin-top: 10px;
+}
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+}
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}

@@ -1,0 +1,76 @@
+opções:
+    f para lzw algoritmo fixo:
+        c para compimir:
+            python3 ./src/lzw.py f c <caminho arquivo para comprimir> <caminho do arquivo de saída (comprimido)> [max_bits]
+        d para descompir arquivo:   
+            python3 ./src/lzw.py f d <caminho arquivo já comprimido> <caminho do arquivo de saída (descomprimido)> [max_bits]
+
+    v para lzw algoritmo variável:
+        c para compimir:
+            python3 ./src/lzw.py v c <caminho arquivo para comprimir> <caminho do arquivo de saída (comprimido)> [max_bits]
+        d para descompir arquivo:   
+            python3 ./src/lzw.py v d <caminho arquivo já comprimido> <caminho do arquivo de saída (descomprimido)> [max_bits]
+
+obs: [max_bits] é um argumento opcional de bits máximos para a codificação/decodificação (padrão: 12 bits)
+
+Como rodar cada exemplo:
+
+Car.bmp
+    python3 ./src/lzw.py f c ./input/bmp/Car.bmp ./output/Car_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Car_comprimido.bin ./output/Car_descomprimido.bmp
+
+Diamond.bmp
+    python3 ./src/lzw.py f c ./input/bmp/Diamond.bmp ./output/Diamond_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Diamond_comprimido.bin ./output/Diamond_descomprimido.bmp
+
+Skater
+    python3 ./src/lzw.py f c ./input/bmp/Skater.bmp ./output/Skater_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Skater_comprimido.bin ./output/Skater_descomprimido.bmp
+
+Sunflow
+    python3 ./src/lzw.py f c ./input/bmp/Sunflow.bmp ./output/Sunflow_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Sunflow_comprimido.bin ./output/Sunflow_descomprimido.bmp
+
+cheers
+    python3 ./src/lzw.py f c ./input/gif/cheers.gif ./output/cheers_comprimido.bin
+    python3 ./src/lzw.py f d ./output/cheers_comprimido.bin ./output/cheers_descomprimido.gif
+
+leo
+    python3 ./src/lzw.py f c ./input/gif/leo.gif ./output/leo_comprimido.bin
+    python3 ./src/lzw.py f d ./output/leo_comprimido.bin ./output/leo_descomprimido.gif
+
+office
+    python3 ./src/lzw.py f c ./input/gif/office.gif ./output/office_comprimido.bin
+    python3 ./src/lzw.py f d ./output/office_comprimido.bin ./output/office_descomprimido.gif
+
+scooby
+    python3 ./src/lzw.py f c ./input/gif/scooby.gif ./output/scooby_comprimido.bin
+    python3 ./src/lzw.py f d ./output/scooby_comprimido.bin ./output/scooby_descomprimido.gif
+
+quadriculado
+    python3 ./src/lzw.py f c ./input/sintetico/quadriculado.tiff ./output/quadriculado_comprimido.bin
+    python3 ./src/lzw.py f d ./output/quadriculado_comprimido.bin ./output/quadriculado_descomprimido.tiff 
+
+ponte
+    python3 ./src/lzw.py f c ./input/tiff/ponte.tiff ./output/ponte_comprimido.bin
+    python3 ./src/lzw.py f d ./output/ponte_comprimido.bin ./output/ponte_descomprimido.tiff
+
+jetplane
+    python3 ./src/lzw.py f c ./input/tiff/jetplane.tiff ./output/jetplane_comprimido.bin
+    python3 ./src/lzw.py f d ./output/jetplane_comprimido.bin ./output/jetplane_descomprimido.tiff
+
+Crime_and_Punishment
+    python3 ./src/lzw.py f c ./input/txt/Crime_and_Punishment.txt ./output/Crime_and_Punishment_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Crime_and_Punishment_comprimido.bin ./output/Crime_and_Punishment_descomprimido.txt
+
+Frankenstein
+    python3 ./src/lzw.py f c ./input/txt/Frankenstein.txt ./output/Frankenstein_comprimido.bin
+    python3 ./src/lzw.py f d ./output/Frankenstein_comprimido.bin ./output/Frankenstein_descomprimido.txt
+
+MobyDick
+    python3 ./src/lzw.py f c ./input/txt/MobyDick.txt ./output/MobyDick_comprimido.bin 16
+    python3 ./src/lzw.py f d ./output/MobyDick_comprimido.bin ./output/MobyDick_descomprimido.txt 16
+
+The_Art_of_War
+    python3 ./src/lzw.py v c ./input/txt/The_Art_of_War.txt ./output/The_Art_of_War_comprimido.bin 16
+    python3 ./src/lzw.py v d ./output/The_Art_of_War_comprimido.bin ./output/The_Art_of_War_descomprimido.txt 16
